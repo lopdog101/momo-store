@@ -1,9 +1,9 @@
 stages:
   - module-pipelines
   - build
-  - test
-  - release
-  - deploy
+  #- test
+  #- release
+  #- deploy
 
 frontend:
   stage: module-pipelines

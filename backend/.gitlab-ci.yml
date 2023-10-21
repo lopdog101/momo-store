@@ -1,0 +1,30 @@
+#changes 0.1.2
+variables:
+  VERSION: "0.1.${CI_PIPELINE_ID}"
+
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'  
+  - remote: 'https://gitlab.com/gitlab-org/gitlab/-/raw/2851f4d5/lib/gitlab/ci/templates/Jobs/SAST.latest.gitlab-ci.yml'
+
+  build-backend-code-job:
+  image: golang:1.18-alpine3.17
+  stage: build  
+  before_script:
+  #/// устанавливаем необходимые пакеты
+    - apk add curl tar
+  script:
+
+  #/// создаем артефакт приложения и присваиваем ему версию по SemVer
+    - cd backend/cmd/api/
+    - go build -o momo-backend${VERSION} 
+  #/// архивируем артефакт и копируем его в Nexus репозиторий
+    - tar czvf momo-store-${VERSION}.tar.gz momo-backend${VERSION}
+  #- curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_URL_BE}/${VERSION}/momo-store-${VERSION}.tar.gz 

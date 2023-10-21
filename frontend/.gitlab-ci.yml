@@ -1,0 +1,30 @@
+#changes 0.1.6
+variables:
+  VERSION: "0.1.${CI_PIPELINE_ID}"
+  
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml' 
+    
+build-frontend-code-job:
+  stage: build
+  image: docker:20.10.12-dind-rootless
+  before_script:
+    - until docker info; do sleep 1; done
+    # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
+    #- docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    #/// Создаем Docker image приложения и сохраняем его в GitLab Container Registry. Образу присваивается версия по SemVer
+    #- cd frontend
+    #- >
+    #  docker build
+    #  --build-arg VUE_APP_API_URL=/api
+    #  --tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA
+    #  .
+    #- docker push $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA

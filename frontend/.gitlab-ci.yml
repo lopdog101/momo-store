@@ -28,3 +28,15 @@ build-frontend-code-job:
       --tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA
       .
     - docker push $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA
+
+sonarqube-frontend-sast:
+  stage: test
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - cd frontend
+    - >
+      sonar-scanner -Dsonar.qualitygate.wait=true \
+        -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=${SONAR_URL} \
+        -Dsonar.login=${SONAR_LOGIN_FRONTEND}

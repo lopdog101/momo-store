@@ -4,6 +4,7 @@ variables:
 stages:
   - build
   - test
+  - notify
  # - release
  # - deploy
 
@@ -61,3 +62,14 @@ sonarqube-frontend-sast:
       - .sonar/cache
   needs:
     - build-frontend-code
+
+notify:
+  stage: notify
+  only:
+    changes:
+    - frontend/**/*
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /send notification/
+  script:
+    # Отредактировать ссылку
+    - 'curl -X POST -H "Content-type: application/json" -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"Вышла новая версия Frontend Momo — $VERSION. Скачать frontend можно по ссылке — https://nexus.k8s.praktikum-services.tech/service/rest/repository/browse/sausage-store-LysyukSergey-frontend/sausage-store-front/sausage-store/$VERSION/ \"}" ${TELEGRAM_API}'

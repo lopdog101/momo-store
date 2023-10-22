@@ -6,6 +6,7 @@ variables:
 stages:
   - build
   - test
+  - notify
  # - release
  # - deploy
 
@@ -74,3 +75,15 @@ build-backend-docker:
       --tag $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHA
       .
     - docker push $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHA
+
+
+notify:
+  stage: notify
+  only:
+    changes:
+    - backend/**/*
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /send notification/
+  script:
+  # Скорректировать ссылку
+    - 'curl -X POST -H "Content-type: application/json" -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"Вышла новая версия Backend Momo — $VERSION. Скачать backend можно по ссылке — https://nexus.k8s.praktikum-services.tech/service/rest/repository/browse/sausage-store-LysyukSergey-frontend/sausage-store-front/sausage-store/$VERSION/ \"}" ${TELEGRAM_API}'

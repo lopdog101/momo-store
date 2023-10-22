@@ -35,7 +35,8 @@ sonarqube-frontend-sast:
   script:
     - cd frontend
     - >
-      sonar-scanner -Dsonar.qualitygate.wait=true \
+      sonar-scanner \
+        -Dsonar.projectName=${SONAR_FRONTEND_PROJECT_KEY} \
         -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} \
         -Dsonar.sources=. \
         -Dsonar.host.url=${SONAR_URL} \

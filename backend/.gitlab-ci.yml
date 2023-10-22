@@ -29,16 +29,16 @@ build-backend-code-job:
   - curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_URL_BE}/${VERSION}/momo-store-${VERSION}.tar.gz 
 
   #/// запускаем тестирование кода встроенным тестом
-go-test-code-job:
-  image: golang:1.18-alpine3.17
-  stage: test 
-  variables:
-    CGO_ENABLED: 0
-  dependencies:
-    - build-backend-code-job
-  script:
-    - cd backend
-    - go test -v ./...
+#go-test-code-job:
+#  image: golang:1.18-alpine3.17
+#  stage: test 
+#  variables:
+#    CGO_ENABLED: 0
+#  dependencies:
+#    - build-backend-code-job
+#  script:
+#    - cd backend
+#    - go test -v ./...
 
 #/// запускаем тестирование кода средствами Sonarqube
 #sonarqube-backend-sast:

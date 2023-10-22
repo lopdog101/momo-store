@@ -48,7 +48,6 @@ sonarqube-backend-sast:
     - build-backend-code-job
   image:
     name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]  
   script:
     - cd backend
     - >

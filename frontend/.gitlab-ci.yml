@@ -4,7 +4,7 @@ variables:
   
 stages:
   - build
- # - test
+  - test
  # - release
  # - deploy
 

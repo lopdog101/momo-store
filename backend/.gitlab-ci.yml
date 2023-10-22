@@ -14,7 +14,7 @@ include:
     file: 'DockerInDockerTemplate.yml'
   - template: Security/SAST.gitlab-ci.yml  
 
-build-backend-code-job:
+build-backend-code:
   image: golang:1.18-alpine3.17
   stage: build  
   before_script:
@@ -35,7 +35,7 @@ go-test-code-job:
   variables:
     CGO_ENABLED: 0
   dependencies:
-    - build-backend-code-job
+    - build-backend-code
   script:
     - cd backend
     - go test -v ./...
@@ -44,7 +44,7 @@ go-test-code-job:
 sonarqube-backend-sast:
   stage: test
   dependencies:
-    - build-backend-code-job
+    - build-backend-code
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]  
@@ -58,7 +58,7 @@ sonarqube-backend-sast:
       -Dsonar.host.url=${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN_BACKEND}
 
-build-backend-docker-job:
+build-backend-docker:
   stage: build
   image: docker:20.10.12-dind-rootless
   before_script:

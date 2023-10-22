@@ -1,6 +1,7 @@
 #changes 0.1.2
 variables:
   VERSION: "0.1.${CI_PIPELINE_ID}"
+  SAST_EXCLUDED_ANALYZERS: "eslint,gosec,nodejs-scan"
 
 stages:
   - build
@@ -11,7 +12,8 @@ stages:
 
 include:
   - project: 'templates/ci'
-    file: 'DockerInDockerTemplate.yml'  
+    file: 'DockerInDockerTemplate.yml'
+  - template: Security/SAST.gitlab-ci.yml  
 
 build-backend-code-job:
   image: golang:1.18-alpine3.17
@@ -25,4 +27,34 @@ build-backend-code-job:
     - go build -o momo-backend${VERSION} 
   #/// архивируем артефакт и копируем его в Nexus репозиторий
     - tar czvf momo-store-${VERSION}.tar.gz momo-backend${VERSION}
-  #- curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_URL_BE}/${VERSION}/momo-store-${VERSION}.tar.gz 
+  - curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_URL_BE}/${VERSION}/momo-store-${VERSION}.tar.gz 
+
+  #/// запускаем тестирование кода встроенным тестом
+go-test-code-job:
+  image: golang:1.18-alpine3.17
+  stage: test 
+  variables:
+    CGO_ENABLED: 0
+  dependencies:
+    - build-backend-code-job
+  script:
+    - cd backend
+    - go test -v ./...
+
+#/// запускаем тестирование кода средствами Sonarqube
+sonarqube-backend-sast:
+  stage: test
+  dependencies:
+    - build-backend-code-job
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]  
+  script:
+    - cd backend
+    - >
+      sonar-scanner 
+      -Dsonar.projectName=${SONAR_BACKEND_PROJECT_KEY}
+      -Dsonar.projectKey=${SONAR_BACKEND_PROJECT_KEY}
+      -Dsonar.sources=. 
+      -Dsonar.host.url=${SONAR_URL}
+      -Dsonar.login=${SONAR_LOGIN_BACKEND}

@@ -31,7 +31,7 @@ build-frontend-code-job:
 
 sonarqube-frontend-sast:
   stage: test
-  image: sonarsource/sonar-scanner-cli
+  image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend
     - >

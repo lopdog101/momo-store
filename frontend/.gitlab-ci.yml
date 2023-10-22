@@ -22,11 +22,10 @@ build-frontend-code-job:
     - cd frontend
     - npm ci --cache .npm --prefer-offline # загрузка зависимостей из кеша
     - npm run build # запуск сборки кода
-    - cd ..
     - mkdir momo-frontend-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
-    - mv frontend/dist/frontend momo-frontend-${VERSION}/public_html # копирование собранного фронтэнда
-    - tar czvf momo-frontend-${VERSION}.tar.gz momo-frontend${VERSION}
-    - curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_FRONTEND_URL}/${VERSION}/momo-store-${VERSION}.tar.gz 
+    - mv dist/ momo-frontend-${VERSION} # копирование собранного фронтэнда
+    - tar czvf momo-frontend-${VERSION}.tar.gz momo-frontend-${VERSION}
+    - curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-frontend-${VERSION}.tar.gz ${NEXUS_REPO_FRONTEND_URL}/${VERSION}/momo-store-${VERSION}.tar.gz 
 
 build-frontend-docker-job:
   stage: build

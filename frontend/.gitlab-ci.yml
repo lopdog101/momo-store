@@ -11,8 +11,24 @@ stages:
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml' 
-    
+
 build-frontend-code-job:
+  stage: build   # этап build
+  cache:
+    - key: npm
+      paths:
+        - frontend/.npm/
+  script: # объявление скрипта
+    - cd frontend
+    - npm ci --cache .npm --prefer-offline # загрузка зависимостей из кеша
+    - npm run build # запуск сборки кода
+    - cd ..
+    - mkdir momo-frontend-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
+    - mv frontend/dist/frontend momo-frontend-${VERSION}/public_html # копирование собранного фронтэнда
+    - tar czvf momo-frontend-${VERSION}.tar.gz momo-frontend${VERSION}
+    - curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-${VERSION}.tar.gz ${NEXUS_REPO_FRONTEND_URL}/${VERSION}/momo-store-${VERSION}.tar.gz 
+
+build-frontend-docker-job:
   stage: build
   image: docker:20.10.12-dind-rootless
   before_script:

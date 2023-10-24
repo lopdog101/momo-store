@@ -5,7 +5,7 @@ stages:
   - build
   - test
   - notify
- # - release
+  - release
  # - deploy
 
 include:

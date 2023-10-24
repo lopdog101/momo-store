@@ -74,7 +74,7 @@ frontend:
         targetPort: 80
   ingress:
     rules:
-      - host: "my-pelmen.mooo.com"
+      - host: "momo-diplom-yandex.mooo.com"
         http:
           paths:
             - path: /

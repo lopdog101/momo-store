@@ -12,7 +12,7 @@ upload-helm-chart:
     - |
       sed -i "s/0.2.*/$VERSION/g" helm-charts/Chart.yaml
       if helm package ./helm-charts; then
-        curl -v -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} ${NEXUS_REPO_URL} --upload-file $CI_PROJECT_DIR/momo-store-${VERSION}.tgz
+        curl -v -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} ${NEXUS_HELM_URL} --upload-file $CI_PROJECT_DIR/momo-store-${VERSION}.tgz
       else
         echo "Failed to package Helm charts."
       fi

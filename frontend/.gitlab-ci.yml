@@ -5,7 +5,7 @@ stages:
   - build
   - test
   - notify
- # - release
+  - release
  # - deploy
 
 include:
@@ -73,3 +73,18 @@ notify:
   script:
     # Отредактировать ссылку
     - 'curl -X POST -H "Content-type: application/json" -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"Вышла новая версия Frontend Momo — $VERSION. Скачать frontend можно по ссылке — https://nexus.k8s.praktikum-services.tech/service/rest/repository/browse/sausage-store-LysyukSergey-frontend/sausage-store-front/sausage-store/$VERSION/ \"}" ${TELEGRAM_API}'
+
+
+upload-frontend-latest:
+  variables:
+    GIT_STRATEGY: none
+  image: docker:20.10.12-dind-rootless
+  stage: release
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA
+    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
+    - docker tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/momo-frontend:latest
+    - docker push $CI_REGISTRY_IMAGE/momo-frontend:latest

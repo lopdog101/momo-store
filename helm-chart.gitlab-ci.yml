@@ -1,0 +1,18 @@
+variables:
+  VERSION: 0.2.${CI_PIPELINE_ID}
+
+stages:
+  - release
+
+upload-helm-chart:
+  stage: release  
+  image: alpine/k8s:1.22.6
+  when: manual
+  script:    
+    - |
+      sed -i "s/0.2.*/$VERSION/g" momo-store-chart/Chart.yaml
+      if helm package ./momo-store-chart; then
+        curl -v -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} ${NEXUS_REPO_URL} --upload-file $CI_PROJECT_DIR/momo-store-${VERSION}.tgz
+      else
+        echo "Failed to package Helm charts."
+      fi

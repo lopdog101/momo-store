@@ -22,14 +22,14 @@ spec:
       labels:
         app:  {{ .Chart.Name }}
         release: {{ .Release.Name }}
-      annotations:
-        kubernetes.io/service-account.name: my-serviceaccount # добавляем аннотацию с именем сервис-аккаунта (для скачивания образов из Container Registry)
+#      annotations:
+#        kubernetes.io/service-account.name: sa-main # добавляем аннотацию с именем сервис-аккаунта (для скачивания образов из Container Registry)
     spec:
       securityContext:
         runAsNonRoot: false  
       containers:
         - name: {{ .Values.name }}
-          image: "{{ .Values.image }}:{{ .Chart.AppVersion}}"
+          image: {{ .Values.image }}:{{ .Chart.AppVersion}}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false

@@ -1,7 +1,7 @@
 ---
 backend:
   name: backend
-  image: gitlab.praktikum-services.ru:5050/std-018-14/momo-store/momo-backend
+  image: gitlab.praktikum-services.ru:5050/std-018-014/momo-store/momo-backend
   imagePullPolicy: Always
   replicas: 1
   strategy:
@@ -31,9 +31,9 @@ backend:
           targetPort: 8081
 
 frontend:
-  fqdn: my-pelmen.mooo.com
+  fqdn: momo-diplom-yandex.mooo.com
   name: frontend
-  image: gitlab.praktikum-services.ru:5050/std-018-14/momo-store/momo-frontend
+  image: gitlab.praktikum-services.ru:5050/std-018-014/momo-store/momo-frontend
   imagePullPolicy: Always
   replicas: 1
   strategy:

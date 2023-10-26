@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . .
 RUN npm install 
-#ARG VUE_APP_API_URL=http://${DEV_HOST}:8081
+VUE_APP_API_URL=http://localhost:8081
 RUN npm run build
 
 

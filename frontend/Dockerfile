@@ -2,14 +2,17 @@
 
 # build stage
 
-FROM node:16.19-alpine AS builder
+FROM node:16 AS builder
 # Create app directory
 WORKDIR /usr/src/app
-COPY package*.json ./
+ARG SHOP_URL=${SHOP_URL}
+ARG VUE_APP_API_URL=https://${SHOP_URL}/api
+ARG NODE_ENV=dev
+COPY ./package.json .
+RUN npm install
 COPY . .
-RUN npm install 
-VUE_APP_API_URL=http://localhost:8081
 RUN npm run build
+RUN ls -la /usr/src/app/dist
 
 
 # release stage

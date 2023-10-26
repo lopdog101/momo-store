@@ -40,6 +40,8 @@ spec:
 {{ toYaml .Values.volumeMounts | indent 12 }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+      imagePullSecrets:
+        - name: docker-config-secret
       volumes:
 {{ toYaml .Values.volumes | indent 8 }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}

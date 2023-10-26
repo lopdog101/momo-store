@@ -5,9 +5,10 @@
 FROM node:16.19-alpine AS builder
 # Create app directory
 WORKDIR /usr/src/app
+COPY package*.json ./
 COPY . .
 RUN npm install 
-ARG VUE_APP_API_URL=http://${DEV_HOST}:8081
+#ARG VUE_APP_API_URL=http://${DEV_HOST}:8081
 RUN npm run build
 
 

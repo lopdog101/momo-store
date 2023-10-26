@@ -41,4 +41,6 @@ spec:
 {{ toYaml .Values.ports | indent 12 }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+      imagePullSecrets:
+        - name: docker-config-secret
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}

@@ -39,6 +39,14 @@ spec:
             readOnlyRootFilesystem: true
           ports:
 {{ toYaml .Values.ports | indent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.servicePort }}
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 10
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       imagePullSecrets:

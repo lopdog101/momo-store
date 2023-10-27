@@ -5,8 +5,8 @@
 FROM node:16 AS builder
 # Create app directory
 WORKDIR /usr/src/app
-ARG SHOP_URL=${SHOP_URL}
-ARG VUE_APP_API_URL=https://${SHOP_URL}/api
+ARG MOMO_URL=${MOMO_URL}
+ARG VUE_APP_API_URL=https://${MOMO_URL}/api
 ARG NODE_ENV=dev
 COPY ./package.json .
 RUN npm install

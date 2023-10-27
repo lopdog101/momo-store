@@ -42,7 +42,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: {{ .Values.servicePort }}
+              port: 8081
             initialDelaySeconds: 15
             periodSeconds: 30
             timeoutSeconds: 3

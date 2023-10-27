@@ -22,8 +22,7 @@ spec:
       labels:
         app: {{ .Chart.Name }}
         release: {{ .Release.Name }}
-      annotations:
-        kubernetes.io/service-account.name: my-serviceaccount # добавляем аннотацию с именем сервис-аккаунта (для скачивания образов из Container Registry)
+      annotations:        
         prometheus.io/path: /metrics
         prometheus.io/port: "8081"
         prometheus.io/scrape: "true"

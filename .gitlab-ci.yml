@@ -34,7 +34,3 @@ helm-chart:
   only:
     changes:
       - helm-charts/**/*
-
-
-deploy-production:
-  stage: deploy

@@ -1,0 +1,30 @@
+version: "3.5"
+services:
+  backend:
+    image: gitlab.praktikum-services.ru:5050/std-018-014/momo-store/momo-backend:latest
+    container_name: backend
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: curl --fail -s http://localhost:8081/health
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - momo-store
+    restart: always
+
+  frontend:
+    image: gitlab.praktikum-services.ru:5050/std-018-014/momo-store/momo-frontend:latest
+    container_name: frontend
+    ports:
+      - "80:80"
+    volumes:
+    - /home/student/test_docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - momo-store
+    restart: always
+
+networks:
+  momo-store:
+    name: momo-store

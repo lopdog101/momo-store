@@ -21,7 +21,7 @@ upload-helm-chart:
 
 deploy-production:
   stage: deploy
-  image: dtzar/helm-kubectl  
+  image: alpine/k8s:1.22.6
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
@@ -31,8 +31,4 @@ deploy-production:
     - chmod 0600 ~/.kube/config
     - helm repo add nexus --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS} $NEXUS_HELM_URL
     - helm repo update
-    - >
-      helm upgrade --install --atomic
-      --kubeconfig ~/.kube/config
-      --set frontend.fqdn=${FQDN_STORE}
-      momo-store nexus/momo-store
+    - helm upgrade --install --atomic --kubeconfig ~/.kube/config --set frontend.fqdn=${FQDN_STORE} momo-store nexus/momo-store

@@ -22,9 +22,7 @@ upload-helm-chart:
 deploy-production:
   stage: deploy
   image: alpine/k8s:1.22.6
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
+  when: manual
   script:
     - mkdir -p ~/.kube
     - ${KUBE_CONFIG} > ~/.kube/config

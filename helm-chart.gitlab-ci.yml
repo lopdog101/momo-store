@@ -25,9 +25,9 @@ deploy-production:
   when: manual
   before_script:
     - mkdir -p ~/.kube
-    - cat $KUBE_CONFIG > config
-    - cp config ~/.kube/config
+    - cat $KUBE_CONFIG > ~/.kube/config    
     - chmod 0600 ~/.kube/config
+    - cat ~/.kube/config
   script:    
     - helm repo add nexus --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS} $NEXUS_HELM_URL
     - helm repo update

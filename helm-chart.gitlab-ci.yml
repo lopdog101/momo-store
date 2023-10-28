@@ -21,24 +21,15 @@ upload-helm-chart:
 
 deploy-production:
   stage: deploy
-  image: alpine:3.15.0
+  image: alpine/k8s:1.22.6
   when: manual
   before_script:
-    - apk add openssh-client bash
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+    - mkdir -p ~/.kube
+    - cat $KUBE_CONFIG > ~/.kube/config    
+    - chmod 0600 ~/.kube/config
+    - cat ~/.kube/config
   script:
-    - cat $KUBE_CONFIG > config
-    - scp config ${USER}@${DEV_HOST}:/home/${USER}/.kube
-    - |
-      ssh -o "SendEnv LC_*" ${USER}@${DEV_HOST} /bin/bash -s << EOT
-      kubectl config view --raw >~/.kube/config
-      helm repo add nexus ${NEXUS_HELM_URL}
-      helm repo update
-      helm upgrade --install momo-store --atomic --timeout 15m nexus/momo-store
-      rm ~/.kube/config 
-      EOT
+    - kubectl config view --raw >~/.kube/config    
+    - helm repo add nexus --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS} $NEXUS_HELM_URL
+    - helm repo update
+    - helm upgrade --install --atomic --kubeconfig ~/.kube/config --set frontend.fqdn=${FQDN_STORE} momo-store nexus/momo-store

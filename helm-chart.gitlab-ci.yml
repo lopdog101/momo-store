@@ -36,6 +36,7 @@ deploy-production:
     - scp config ${USER}@${DEV_HOST}:/home/${USER}/.kube
     - |
       ssh -o "SendEnv LC_*" ${USER}@${DEV_HOST} /bin/bash -s << EOT
+      kubectl config view --raw >~/.kube/config
       helm repo add nexus ${NEXUS_HELM_URL}
       helm repo update
       helm upgrade --install momo-store --atomic --timeout 15m nexus/momo-store

@@ -23,10 +23,11 @@ deploy-production:
   stage: deploy
   image: alpine/k8s:1.22.6
   when: manual
-  script:
+  before_script:
     - mkdir -p ~/.kube
     - ${KUBE_CONFIG} > ~/.kube/config
     - chmod 0600 ~/.kube/config
+  script:    
     - helm repo add nexus --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS} $NEXUS_HELM_URL
     - helm repo update
     - helm upgrade --install --atomic --kubeconfig ~/.kube/config --set frontend.fqdn=${FQDN_STORE} momo-store nexus/momo-store

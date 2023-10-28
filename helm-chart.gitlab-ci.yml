@@ -3,6 +3,17 @@ variables:
 
 stages:
   - release
+  - deploy
+
+
+.helm_prepare:
+  image: dtzar/helm-kubectl
+  before_script:
+    - mkdir -p ~/.kube
+    - base64 -d ${KUBE_CONFIG} > ~/.kube/config
+    - chmod 0600 ~/.kube/config
+    - helm repo add momo-store --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS} $NEXUS_HELM_URL
+    - helm repo update
 
 upload-helm-chart:
   stage: release  
@@ -16,3 +27,11 @@ upload-helm-chart:
       else
         echo "Failed to package Helm charts."
       fi
+
+
+deploy-production:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+  extends: .trigger-infra

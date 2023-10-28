@@ -1,7 +1,3 @@
-# multistage dockerfile
-
-# build stage
-
 FROM node:16 AS builder
 # Create app directory
 WORKDIR /usr/src/app

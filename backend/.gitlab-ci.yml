@@ -99,3 +99,32 @@ upload-backend-latest:
     - docker pull $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/momo-backend:latest
     - docker push $CI_REGISTRY_IMAGE/momo-backend:latest
+
+deploy-k8s:
+  stage: deploy
+  rules:
+    - changes:
+        - backend/*
+  needs:
+    - build-backend-docker
+  environment:
+    name: production-backend 
+  image:
+    name: alpine/k8s:1.24.13
+  before_script:
+    - mkdir ~/.kube
+    - echo ${KUBE_CONFIG} > ~/.kube/config 
+  script:
+    - |
+      kubectl config use-context yc-k8s-zonal-admin --namespace=default
+
+      helm repo add nexus ${NEXUS_HELM_URL} --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS}
+      helm repo update
+     
+      helm upgrade --install momo-store-backend \
+      --kube-context yc-k8s-zonal-admin \
+      --namespace default \
+      --set image.tag="${VERSION}" \      
+      --atomic --timeout 15m nexus/momo-store-backend
+  after_script:
+    - rm ~/.kube/config

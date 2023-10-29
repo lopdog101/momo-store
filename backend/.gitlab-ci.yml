@@ -8,7 +8,7 @@ stages:
   - test
   - notify
   - release
- # - deploy
+  - deploy
 
 include:
   - project: 'templates/ci'

@@ -19,7 +19,7 @@ upload-helm-chart:
       fi
 
 
-deploy-k8s:
+deploy-momo-store:
   stage: deploy
   image:
     name: alpine/k8s:1.24.13

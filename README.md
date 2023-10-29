@@ -1,5 +1,7 @@
 # Momo Store aka Пельменная №2
 
+Инфраструктура описана и хранится отдельно в https://gitlab.praktikum-services.ru/std-018-014/momo-store-infrastructure
+
 # Оглавление <!-- omit in toc -->
 
 - [Общее](#общее)

@@ -116,15 +116,6 @@ deploy-k8s:
     - cat $KUBE_CONFIG > ~/.kube/config 
   script:
     - |
-      kubectl config use-context yc-k8s-zonal-admin --namespace=default
-
-      helm repo add nexus ${NEXUS_HELM_URL} --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS}
-      helm repo update
-     
-      helm upgrade --install momo-store-backend \
-      --kube-context yc-k8s-zonal-admin \
-      --namespace default \
-      --set image.tag="${VERSION}" \      
-      --atomic --timeout 15m nexus/momo-store-backend
+      kubectl get po      
   after_script:
     - rm ~/.kube/config

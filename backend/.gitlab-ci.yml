@@ -114,6 +114,8 @@ deploy-k8s:
   before_script:
     - mkdir ~/.kube
     - cat $KUBE_CONFIG > ~/.kube/config 
+    - curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+    - yc managed-kubernetes cluster get-credentials --id catg0an04p2cdtd75ml6 --external --force
   script:
     - |
       kubectl get po      

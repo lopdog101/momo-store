@@ -113,7 +113,7 @@ deploy-k8s:
     name: alpine/k8s:1.24.13
   before_script:
     - mkdir ~/.kube
-    - echo ${KUBE_CONFIG} > ~/.kube/config 
+    - cat $KUBE_CONFIG > ~/.kube/config 
   script:
     - |
       kubectl config use-context yc-k8s-zonal-admin --namespace=default

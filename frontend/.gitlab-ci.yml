@@ -6,7 +6,6 @@ stages:
   - test
   - notify
   - release
- # - deploy
 
 include:
   - project: 'templates/ci'
@@ -88,22 +87,3 @@ upload-frontend-latest:
     # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
     - docker tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/momo-frontend:latest
     - docker push $CI_REGISTRY_IMAGE/momo-frontend:latest
-
-#deploy-k8s:
-#  stage: deploy
-#  rules:
-#    - changes:
-#        - frontend/*
-#  needs:
-#    - build-frontend-docker
-#  image:
-#    name: alpine/k8s:1.24.13
-#  script:
-#    - kubectl config set-cluster "$KUBE_CLUSTER_NAME" --server="$KUBE_URL" --insecure-skip-tls-verify=true
-#    - kubectl config set-credentials "$KUBE_USERNAME" --token="$KUBE_TOKEN"
-#    - kubectl config set-context default --cluster="$KUBE_CLUSTER_NAME" --user="$KUBE_USERNAME"
-#    - kubectl config use-context default
-#    - kubectl get po
-#    - helm repo add nexus ${NEXUS_HELM_URL} --username ${NEXUS_REPO_USER} --password ${NEXUS_REPO_PASS}
-#    - helm repo update
-#    - helm upgrade --install momo-store --atomic --timeout 15m nexus/momo-store

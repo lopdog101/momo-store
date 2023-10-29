@@ -11,6 +11,18 @@
 
 <img width="900" alt="image" src="https://user-images.githubusercontent.com/9394918/167876466-2c530828-d658-4efe-9064-825626cc6db5.png">
 
+## Структура репозитория приложения
+
+```
+.
+├── backend
+├── frontend
+├── docker-compose.yml
+├── helm-chart.gitlab-ci.yml
+├── .gitlab-ci.yml
+└── README.md
+```
+
 # Общее
 
 Сборка приложения выполняется сразу в контейнеры, которые затем деплоятся в кластер Kubernetes, развернутый в Яндекс.Облаке.
@@ -67,9 +79,6 @@ EXPOSE 80
 Dockerfile:
 
 ```dockerfile
-##
-## STEP 1 - BUILD
-##
 
 FROM golang:1.18-alpine as build
 
@@ -96,22 +105,4 @@ COPY --from=build /backend /backend
 EXPOSE 8081
 # Start app
 ENTRYPOINT ["/backend"]
-```
-## Локальный запуск
-
-Через docker-compose
-
-```bash
-docker-compose up
-```
-## Структура репозитория приложения
-
-```
-.
-├── backend
-├── frontend
-├── docker-compose.yml
-├── helm-chart.gitlab-ci.yml
-├── .gitlab-ci.yml
-└── README.md
 ```
